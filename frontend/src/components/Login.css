@@ -1,82 +1,90 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f3f3f3;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
-  
-  .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    max-width: 500px; /* Aumenta el ancho máximo */
-  }
-  
-  .login-box {
-    background-color: #fff;
-    border-radius: 10px; /* Aumenta el radio del borde */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 40px; /* Aumenta el padding */
-    width: 100%;
-    text-align: center;
-  }
-  
-  .login-header {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .login-header img {
-    width: 300px; /* Ajusta el tamaño según sea necesario */
-    height: auto;
-  }
-  
-  .input-group {
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    position: relative;
-  }
-  
-  .input-group img {
-    position: absolute;
-    left: 10px;
-    width: 25px; /* Ajusta el tamaño según sea necesario */
-    height: auto;
-  }
-  
-  .input-group input {
-    width: 100%;
-    padding: 10px 10px 10px 40px; /* Ajusta el padding para que el texto no se superponga con el icono */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    width: 100%;
-    padding: 15px; /* Aumenta el tamaño del botón */
-    border: none;
-    border-radius: 5px;
-    background-color: #0056b3; /* Azul más opaco */
-    color: white;
-    font-size: 18px; /* Aumenta el tamaño de la fuente */
-  }
-  
-  .links {
-    margin-top: 15px;
-  }
-  
-  .links a {
-    color: #0056b3; /* Azul más opaco */
-    text-decoration: none;
-  }
-  
-  .links a:hover {
-    text-decoration: underline;
-  }
-  
+  font-family: Arial, sans-serif;
+  background-color: #f3f3f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 500px; /* Aumenta el ancho máximo */
+}
+
+.login-box {
+  background-color: #fff;
+  border-radius: 10px; /* Aumenta el radio del borde */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 40px; /* Aumenta el padding */
+  width: 100%;
+  text-align: center;
+}
+
+.login-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.login-header img {
+  width: 300px; /* Ajusta el tamaño según sea necesario */
+  height: auto;
+}
+
+.input-group {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.input-group img {
+  position: absolute;
+  left: 10px;
+  width: 25px; /* Ajusta el tamaño según sea necesario */
+  height: auto;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px 10px 10px 40px; /* Ajusta el padding para que el texto no se superponga con el icono */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  width: 100%;
+  padding: 15px; /* Aumenta el tamaño del botón */
+  border: none;
+  border-radius: 5px;
+  background-color: #0056b3; /* Azul más opaco */
+  color: white;
+  font-size: 18px; /* Aumenta el tamaño de la fuente */
+}
+
+button[disabled] {
+  background-color: #cccccc;
+}
+
+.links {
+  margin-top: 15px;
+}
+
+.links a {
+  color: #0056b3; /* Azul más opaco */
+  text-decoration: none;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+.error-alert {
+  color: red;
+  margin-bottom: 15px;
+}

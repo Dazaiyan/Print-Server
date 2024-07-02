@@ -6,16 +6,23 @@ import './Login.css';
 const Login = () => {
   const [cedula, setCedula] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
     try {
       const res = await login(cedula, password);
       localStorage.setItem('token', res.data.token);
       navigate('/print');
     } catch (error) {
       console.error('Error al iniciar sesión', error);
+      setError('Hubo un error al iniciar sesión. Por favor, verifica tus credenciales.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -25,6 +32,7 @@ const Login = () => {
         <div className="login-header">
           <img src="logo.png" alt="Logo del Hospital" /> {/* Asegúrate de tener un logo adecuado */}
         </div>
+        {error && <div className="error-alert">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <img src="usuario.png" alt="Cédula Icon" /> {/* Asegúrate de tener un icono adecuado */}
@@ -46,7 +54,9 @@ const Login = () => {
               required
             />
           </div>
-          <button type="submit">Iniciar sesión</button>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Cargando...' : 'Iniciar sesión'}
+          </button>
         </form>
         <div className="links">
           <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
