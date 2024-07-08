@@ -2,9 +2,8 @@ const express = require('express');
 const multer = require('multer');
 const { printDocument } = require('../controllers/printController');
 
-const router = express.Router();
-
 const upload = multer({ dest: 'uploads/' });
+const router = express.Router();
 
 router.post('/print', upload.single('file'), printDocument);
 

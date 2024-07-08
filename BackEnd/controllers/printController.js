@@ -1,12 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 const printer = require('pdf-to-printer');
+const pool = require('../db');
 
 const uploadDir = path.join(__dirname, '../uploads');
 
 const printDocument = async (req, res) => {
-    const { module, pages } = req.body;
+    const { module, pages, orientation, color, paperSize, copies } = req.body;
     const file = req.file;
+    const userId = req.userId;
 
     if (!file) {
         return res.status(400).json({ message: 'No file uploaded' });
@@ -27,12 +29,23 @@ const printDocument = async (req, res) => {
 
     const options = {
         printer: printerName,
-        pages: pages.toString()
+        pages: pages === 'range' ? `${req.body.page_from}-${req.body.page_to}` : pages,
+        orientation: orientation,
+        monochrome: color === 'bw',
+        paperSize: paperSize,
+        copies: copies
     };
 
     try {
         await printer.print(filePath, options);
-        return res.json({ message: 'Printed successfully' });
+        
+        // Guardar en la base de datos
+        const result = await pool.query(
+            'INSERT INTO prints (file_name, pages, copies, created_at, printer, user_id) VALUES ($1, $2, $3, NOW(), $4, $5) RETURNING *',
+            [file.originalname, pages, copies, printerName, userId]
+        );
+
+        return res.json({ message: 'Printed successfully', printRecord: result.rows[0] });
     } catch (error) {
         console.error('Printing error:', error);
         return res.status(500).json({ message: 'Server error' });
