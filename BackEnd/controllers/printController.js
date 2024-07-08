@@ -33,8 +33,8 @@ const printDocument = async (req, res) => {
 
         console.log('Printing with options:', { printer: printerName, pages: pages });
 
-        // Comando para imprimir usando lp
-        const printCommand = `lp -d ${printerName} ${filePath}`;
+        // Ajusta el comando lp para incluir opciones de impresión necesarias
+        const printCommand = `lp -d ${printerName} -o media=iso_a4_210x297mm -o sides=one-sided ${filePath}`;
 
         exec(printCommand, (error, stdout, stderr) => {
             if (error) {
@@ -53,4 +53,5 @@ const printDocument = async (req, res) => {
 module.exports = {
     printDocument
 };
+
 
