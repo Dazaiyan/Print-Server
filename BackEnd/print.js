@@ -1,6 +1,6 @@
 const printer = require('pdf-to-printer');
 
-const filePath = 'C:\\Users\\ANGIE MENENDEZ\\Downloads\\reporte.pdf'; // Ruta del archivo
+const filePath = 'C:\\home\\practica\\Descargas\\xd.pdf';
 const printerName = 'IPP Printer'; // Reemplaza con el nombre correcto de tu impresora
 
 const options = {

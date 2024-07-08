@@ -1,6 +1,6 @@
 const printers = {
     "module1": {
-        name: "CSIMCGOPERPRT",
+        name: "TICS_RICOH_LANIER_601",
         ip: "172.20.31.61"
     },
 };
