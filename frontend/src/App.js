@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import PrintPage from './pages/PrintPage';
-import AdminPrintPage from './components/AdminPrintPage';
 import PrivateRoute from './routes/PrivateRoute';
 import './App.css';
 
@@ -25,17 +24,9 @@ function App() {
             } 
           />
           <Route 
-            path="/admin/print" 
-            element={
-              <PrivateRoute requiredRole="admin">
-                <AdminPrintPage />
-              </PrivateRoute>
-            } 
-          />
-          <Route 
             path="/" 
             element={
-              isAuthenticated ? <Navigate to="/print" /> : <Navigate to="/login" />
+              isAuthenticated ? <Navigate to="/login" /> : <Navigate to="/print" />
             } 
           />
         </Routes>
