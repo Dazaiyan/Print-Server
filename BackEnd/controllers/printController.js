@@ -38,15 +38,24 @@ const printDocument = async (req, res) => {
             return res.status(400).json({ message: 'Invalid module' });
         }
 
-        let pageRange = '';
-        if (pages === 'range' && page_from && page_to) {
-            pageRange = ` -o page-ranges=${page_from}-${page_to}`;
+        // Configurar las opciones de impresión
+        let printOptions = `-d ${printerName} -o media=${paperSize} -o sides=one-sided -n ${copies}`;
+
+        if (orientation === 'landscape') {
+            printOptions += ' -o orientation-requested=4'; // Landscape
+        } else {
+            printOptions += ' -o orientation-requested=3'; // Portrait
         }
 
-        console.log('Printing with options:', { printer: printerName, pages, copies, orientation, color, paperSize });
+        if (color === 'bw') {
+            printOptions += ' -o ColorModel=Gray';
+        }
 
-        // Ajusta el comando lp para incluir opciones de impresión necesarias
-        const printCommand = `lp -d ${printerName} -o media=${paperSize} -o sides=one-sided -n ${copies} ${pageRange} ${filePath}`;
+        if (pages === 'range') {
+            printOptions += ` -o page-ranges=${page_from}-${page_to}`;
+        }
+
+        const printCommand = `lp ${printOptions} ${filePath}`;
 
         exec(printCommand, async (error, stdout, stderr) => {
             if (error) {
@@ -55,16 +64,33 @@ const printDocument = async (req, res) => {
             }
             console.log('Printed successfully', stdout);
 
-            // Insertar detalles de la impresión en la base de datos
             try {
                 const result = await pool.query(
                     'INSERT INTO prints (file_name, pages, copies, printer, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
                     [fileName, pages, copies, printerName, userId]
                 );
                 console.log('Print details saved to database:', result.rows[0]);
+
+                fs.unlink(filePath, (err) => {
+                    if (err) {
+                        console.error('Failed to delete file:', err);
+                    } else {
+                        console.log('File deleted successfully');
+                    }
+                });
+
                 return res.json({ message: 'Printed successfully and details saved to database', output: stdout, printDetails: result.rows[0] });
             } catch (dbError) {
                 console.error('Database error:', dbError);
+
+                fs.unlink(filePath, (err) => {
+                    if (err) {
+                        console.error('Failed to delete file:', err);
+                    } else {
+                        console.log('File deleted successfully');
+                    }
+                });
+
                 return res.status(500).json({ message: 'Printed successfully, but failed to save details to database', error: dbError.message });
             }
         });
@@ -77,6 +103,4 @@ const printDocument = async (req, res) => {
 module.exports = {
     printDocument
 };
-
-
 
