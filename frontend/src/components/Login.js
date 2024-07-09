@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
+import 'boxicons'; // Importa Boxicons
 import './Login.css';
 
 const Login = () => {
   const [cedula, setCedula] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -30,12 +32,12 @@ const Login = () => {
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          <img src="logo.png" alt="Logo del Hospital" /> {/* Asegúrate de tener un logo adecuado */}
+          <img src="/logo.png" alt="Logo del Hospital" /> {/* Asegúrate de tener un logo adecuado */}
         </div>
         {error && <div className="error-alert">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <img src="usuario.png" alt="Cédula Icon" /> {/* Asegúrate de tener un icono adecuado */}
+            <img src="/usuario.png" alt="Cédula Icon" /> {/* Asegúrate de tener un icono adecuado */}
             <input
               type="cedula"
               value={cedula}
@@ -45,14 +47,21 @@ const Login = () => {
             />
           </div>
           <div className="input-group">
-            <img src="contraseña.png" alt="Password Icon" /> {/* Asegúrate de tener un icono adecuado */}
+            <img src="/contraseña.png" alt="Password Icon" /> {/* Asegúrate de tener un icono adecuado */}
             <input
-              type="password"
+              id="password"
+              type={showPassword ? "showpassword" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Contraseña"
               required
             />
+            <box-icon
+              name={showPassword ? 'show' : 'hide'}
+              type='solid'
+              className="show-password-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            ></box-icon>
           </div>
           <button type="submit" disabled={loading}>
             {loading ? 'Cargando...' : 'Iniciar sesión'}
