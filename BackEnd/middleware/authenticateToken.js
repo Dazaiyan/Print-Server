@@ -7,10 +7,9 @@ const authenticateToken = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
-        req.userId = user.userId;
-        req.role = user.role;
+        req.cedula = user.cedula; // Asegúrate de que esto esté configurado correctamente
         next();
     });
 };
 
-module.exports = { authenticateToken };
+module.exports = authenticateToken;

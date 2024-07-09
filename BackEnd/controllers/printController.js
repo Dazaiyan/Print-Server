@@ -8,7 +8,7 @@ const uploadDir = path.join(__dirname, '../uploads');
 const printDocument = async (req, res) => {
     const { module, pages, orientation, color, paperSize, copies } = req.body;
     const file = req.file;
-    const userId = req.userId;
+    const cedula = req.cedula; // Asegúrate de que esto esté configurado correctamente
 
     if (!file) {
         return res.status(400).json({ message: 'No file uploaded' });
@@ -41,8 +41,8 @@ const printDocument = async (req, res) => {
         
         // Guardar en la base de datos
         const result = await pool.query(
-            'INSERT INTO prints (file_name, pages, copies, created_at, printer, user_id) VALUES ($1, $2, $3, NOW(), $4, $5) RETURNING *',
-            [file.originalname, pages, copies, printerName, userId]
+            'INSERT INTO prints (file_name, pages, copies, created_at, printer, user_cedula) VALUES ($1, $2, $3, NOW(), $4, $5) RETURNING *',
+            [file.originalname, pages, copies, printerName, cedula]
         );
 
         return res.json({ message: 'Printed successfully', printRecord: result.rows[0] });

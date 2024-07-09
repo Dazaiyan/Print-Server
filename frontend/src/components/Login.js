@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
-import 'boxicons'; // Importa Boxicons
 import './Login.css';
 
 const Login = () => {
