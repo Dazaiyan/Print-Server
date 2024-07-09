@@ -37,7 +37,7 @@ const Login = () => {
           <div className="input-group">
             <img src="usuario.png" alt="Cédula Icon" /> {/* Asegúrate de tener un icono adecuado */}
             <input
-              type="text"
+              type="cedula"
               value={cedula}
               onChange={(e) => setCedula(e.target.value)}
               placeholder="Cédula"
