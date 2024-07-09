@@ -4,7 +4,7 @@ const pool = require('../db');
 require('dotenv').config();
 
 const login = async (req, res) => {
-    const { cedula, password } = req.body;
+    const { cedula, password, role } = req.body;
 
     try {
         const userResult = await pool.query('SELECT * FROM users WHERE cedula = $1', [cedula]);
@@ -17,14 +17,18 @@ const login = async (req, res) => {
 
         // Verifica la contraseña
         const isMatch = await bcrypt.compare(password, user.password);
-        console.log('Password match:', isMatch);
 
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Genera el token JWT con una expiración de 4 horas
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '4h' });
+        // Verifica el rol
+        if (user.role !== role) {
+            return res.status(403).json({ message: 'Unauthorized' });
+        }
+
+        // Genera el token JWT
+        const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '4h' });
 
         res.json({ token });
     } catch (error) {

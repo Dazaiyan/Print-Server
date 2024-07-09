@@ -10,6 +10,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [role, setRole] = useState('user'); // Añadir el estado para el rol
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -17,9 +18,14 @@ const Login = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await login(cedula, password);
+      const res = await login(cedula, password, role); // Incluye el rol en la petición
       localStorage.setItem('token', res.data.token);
-      navigate('/print');
+      localStorage.setItem('role', role); // Guarda el rol en el almacenamiento local
+      if (role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/print');
+      }
     } catch (error) {
       console.error('Error al iniciar sesión', error);
       setError('Hubo un error al iniciar sesión. Por favor, verifica tus credenciales.');
@@ -50,7 +56,7 @@ const Login = () => {
             <img src="/contraseña.png" alt="Password Icon" /> {/* Asegúrate de tener un icono adecuado */}
             <input
               id="password"
-              type={showPassword ? "showpassword" : "password"}
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Contraseña"
@@ -62,6 +68,13 @@ const Login = () => {
               className="show-password-icon"
               onClick={() => setShowPassword(!showPassword)}
             ></box-icon>
+          </div>
+          <div className="input-group">
+            <label htmlFor="role">Rol:</label>
+            <select id="role" value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="user">Usuario</option>
+              <option value="admin">Administrador</option>
+            </select>
           </div>
           <button type="submit" disabled={loading}>
             {loading ? 'Cargando...' : 'Iniciar sesión'}

@@ -3,12 +3,14 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import PrintPage from './pages/PrintPage';
+import AdminPage from './components/AdminPage'; // Importar la página de admin
 import PrivateRoute from './routes/PrivateRoute';
 import './App.css';
 
 function App() {
   const isAuthenticated = !!localStorage.getItem('token');
-  
+  const userRole = localStorage.getItem('role');
+
   return (
     <div className="App">
       <Router>
@@ -24,9 +26,17 @@ function App() {
             } 
           />
           <Route 
+            path="/admin" 
+            element={
+              <PrivateRoute>
+                <AdminPage />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
             path="/" 
             element={
-              isAuthenticated ? <Navigate to="/login" /> : <Navigate to="/print" />
+              isAuthenticated ? (userRole === 'admin' ? <Navigate to="/admin" /> : <Navigate to="/login" />) : <Navigate to="/print" />
             } 
           />
         </Routes>
