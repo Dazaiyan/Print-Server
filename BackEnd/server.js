@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const printRoutes = require('./routes/printRoutes');
-const authenticateToken = require('./middleware/authenticateToken'); // Importar el middleware
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,7 +16,7 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
-app.use('/api/print', authenticateToken, printRoutes); // Usar el middleware para proteger las rutas de impresión
+app.use('/api/print', printRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
