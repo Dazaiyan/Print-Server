@@ -2,13 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const printer = require('pdf-to-printer');
 const pool = require('../db');
+const pdf = require('pdf-parse'); // Asegúrate de instalar pdf-parse con npm install pdf-parse
 
 const uploadDir = path.join(__dirname, '../uploads');
 
 const printDocument = async (req, res) => {
-    const { module, pages, orientation, color, paperSize, copies } = req.body;
+    const { module, orientation, color, paperSize, copies } = req.body;
     const file = req.file;
-    const cedula = req.cedula; // Asegúrate de que esto esté configurado correctamente
+    const userCedula = req.cedula;
 
     if (!file) {
         return res.status(400).json({ message: 'No file uploaded' });
@@ -29,7 +30,6 @@ const printDocument = async (req, res) => {
 
     const options = {
         printer: printerName,
-        pages: pages === 'range' ? `${req.body.page_from}-${req.body.page_to}` : pages,
         orientation: orientation,
         monochrome: color === 'bw',
         paperSize: paperSize,
@@ -37,12 +37,17 @@ const printDocument = async (req, res) => {
     };
 
     try {
+        // Leer el contenido del archivo PDF y contar el número de páginas
+        const dataBuffer = fs.readFileSync(filePath);
+        const data = await pdf(dataBuffer);
+        const pages = data.numpages;
+
         await printer.print(filePath, options);
-        
+
         // Guardar en la base de datos
         const result = await pool.query(
             'INSERT INTO prints (file_name, pages, copies, created_at, printer, user_cedula) VALUES ($1, $2, $3, NOW(), $4, $5) RETURNING *',
-            [file.originalname, pages, copies, printerName, cedula]
+            [file.originalname, pages, copies, printerName, userCedula]
         );
 
         return res.json({ message: 'Printed successfully', printRecord: result.rows[0] });

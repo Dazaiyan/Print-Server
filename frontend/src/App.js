@@ -36,7 +36,7 @@ function App() {
           <Route 
             path="/" 
             element={
-              isAuthenticated ? (userRole === 'admin' ? <Navigate to="/admin" /> : <Navigate to="/login" />) : <Navigate to="/print" />
+              isAuthenticated ? (userRole === 'admin' ? <Navigate to="/login" /> : <Navigate to="/admin" />) : <Navigate to="/print" />
             } 
           />
         </Routes>

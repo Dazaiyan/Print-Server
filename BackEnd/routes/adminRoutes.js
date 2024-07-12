@@ -3,7 +3,7 @@ const { authenticateToken } = require('../middleware/authenticateToken');
 const pool = require('../db');
 const router = express.Router();
 
-router.get('/print-records', authenticateToken, async (req, res) => {
+router.get('/admin', authenticateToken, async (req, res) => {
     if (req.role !== 'admin') {
         return res.status(403).json({ message: 'Unauthorized' });
     }

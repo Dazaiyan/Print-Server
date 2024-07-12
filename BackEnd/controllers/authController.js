@@ -4,7 +4,7 @@ const pool = require('../db');
 require('dotenv').config();
 
 const login = async (req, res) => {
-    const { cedula, password, role } = req.body;
+    const { cedula, password } = req.body;
 
     try {
         const userResult = await pool.query('SELECT * FROM users WHERE cedula = $1', [cedula]);
@@ -22,13 +22,8 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Verifica el rol
-        if (user.role !== role) {
-            return res.status(403).json({ message: 'Unauthorized' });
-        }
-
         // Genera el token JWT
-        const token = jwt.sign({ userId: user.id, cedula: user.cedula }, process.env.JWT_SECRET, { expiresIn: '4h' });  
+        const token = jwt.sign({ userId: user.id, cedula: user.cedula, role: user.role }, process.env.JWT_SECRET, { expiresIn: '4h' });  
 
         res.json({ token });
     } catch (error) {

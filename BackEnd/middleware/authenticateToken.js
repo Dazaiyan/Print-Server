@@ -7,7 +7,8 @@ const authenticateToken = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) return res.sendStatus(403);
-        req.cedula = user.cedula; // Asegúrate de que esto esté configurado correctamente
+        req.userId = user.userId;
+        req.role = user.role;  // Asegúrate de que el rol está siendo añadido
         next();
     });
 };
