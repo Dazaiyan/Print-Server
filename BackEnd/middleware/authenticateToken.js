@@ -10,7 +10,7 @@ const authenticateToken = (req, res, next) => {
         if (err) return res.sendStatus(403);
         req.userId = user.userId;
         req.role = user.role;
-        req.cedula = user.cedula;  // Asegúrate de que el valor de cedula está añadido
+        req.cedula = user.cedula;
         next();
     });
 };
