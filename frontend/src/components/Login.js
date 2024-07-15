@@ -17,9 +17,12 @@ const Login = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await login(cedula, password, role); // Incluye el rol en la petición
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('role', role); // Guarda el rol en el almacenamiento local
+      const res = await login(cedula, password); // No es necesario enviar 'role' aquí
+
+      // Almacena el token en una cookie
+      document.cookie = `token=${res.token}; max-age=14400; path=/`; // Max-age en segundos (4 horas)
+
+      // Redirige según el rol del usuario
       if (role === 'admin') {
         navigate('/admin');
       } else {
