@@ -1,3 +1,4 @@
+// app.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -20,4 +21,3 @@ app.use('/api/prints', printRoutes);
 app.use('/api/auth', authRoutes);
 
 module.exports = app;
-

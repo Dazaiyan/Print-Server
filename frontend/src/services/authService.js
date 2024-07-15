@@ -1,9 +1,13 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/auth/';
-
-const login = (cedula, password) => {
-    return axios.post(API_URL + 'login', { cedula, password });
+export const login = async (cedula, password) => {
+  return await axios.post('http://localhost:5000/api/auth/login', { cedula, password }, {
+    withCredentials: true
+  });
 };
 
-export { login };
+export const checkAuth = async () => {
+  return await axios.get('http://localhost:5000/api/auth/checkAuth', {
+    withCredentials: true
+  });
+};

@@ -2,19 +2,15 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 const pool = require('../db');
+const { PDFDocument } = require('pdf-lib');
 
 const uploadDir = path.join(__dirname, '../uploads');
 
 const printDocument = async (req, res) => {
     try {
-        const userId = req.userId;
-        if (!userId) {
-            console.error('User not authenticated');
-            return res.status(401).json({ message: 'User not authenticated' });
-        }
-
         const { module, pages, copies = 1, orientation, color, paperSize, page_from, page_to } = req.body;
         const file = req.file;
+        const userCedula = req.cedula;  // Obtener el valor de user_cedula desde el request
 
         console.log('Request body:', req.body);
         console.log('Uploaded file:', file);
@@ -51,8 +47,17 @@ const printDocument = async (req, res) => {
             printOptions += ' -o ColorModel=Gray';
         }
 
-        if (pages === 'range') {
+        // Contar el número de páginas del archivo PDF
+        let pageCount;
+        if (pages === 'all') {
+            const pdfBytes = fs.readFileSync(filePath);
+            const pdfDoc = await PDFDocument.load(pdfBytes);
+            pageCount = pdfDoc.getPageCount();
+        } else if (pages === 'range') {
             printOptions += ` -o page-ranges=${page_from}-${page_to}`;
+            pageCount = page_to - page_from + 1;
+        } else {
+            pageCount = parseInt(pages, 10);
         }
 
         const printCommand = `lp ${printOptions} ${filePath}`;
@@ -66,8 +71,8 @@ const printDocument = async (req, res) => {
 
             try {
                 const result = await pool.query(
-                    'INSERT INTO prints (file_name, pages, copies, printer, user_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                    [fileName, pages, copies, printerName, userId]
+                    'INSERT INTO prints (file_name, pages, copies, printer, user_cedula) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                    [fileName, pageCount, copies, printerName, userCedula]  // Incluir user_cedula en la inserción
                 );
                 console.log('Print details saved to database:', result.rows[0]);
 
@@ -79,7 +84,11 @@ const printDocument = async (req, res) => {
                     }
                 });
 
-                return res.json({ message: 'Printed successfully and details saved to database', output: stdout, printDetails: result.rows[0] });
+                return res.json({
+                    message: 'Printed successfully and details saved to database',
+                    output: stdout,
+                    printDetails: result.rows[0],
+                });
             } catch (dbError) {
                 console.error('Database error:', dbError);
 

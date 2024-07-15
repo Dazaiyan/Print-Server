@@ -41,6 +41,9 @@ body {
   display: flex;
   align-items: center;
   position: relative;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 
 .input-group img {
@@ -52,9 +55,18 @@ body {
 
 .input-group input {
   width: 100%;
-  padding: 10px 10px 10px 40px; /* Ajusta el padding para que el texto no se superponga con el icono */
-  border: 1px solid #ccc;
+  padding: 10px 40px 10px 40px; /* Ajusta el padding para que el texto no se superponga con el icono */
+  border: none;
+  outline: none;
   border-radius: 5px;
+  flex: 1;
+}
+
+.show-password-icon {
+  cursor: pointer;
+  position: absolute;
+  right: 10px; /* Posiciona el icono a la derecha */
+  font-size: 24px; /* Ajusta el tamaño del icono según sea necesario */
 }
 
 button {

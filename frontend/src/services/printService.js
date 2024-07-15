@@ -1,12 +1,17 @@
 import axios from 'axios';
 
-const API_URL = 'https://23k9vt4z-5000.use.devtunnels.ms/';
+const API_URL = 'http://localhost:5000/api/print/print';
 
 const addPrintRequest = (file, fileName, printer) => {
-    const token = localStorage.getItem('token');
-    return axios.post(API_URL, { file, fileName, printer }, {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('fileName', fileName);
+    formData.append('printer', printer);
+
+    return axios.post(API_URL, formData, {
+        withCredentials: true,  // Esto asegura que las cookies se envíen con la solicitud
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'multipart/form-data'
         }
     });
 };

@@ -19,7 +19,6 @@ const PrintForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
 
     if (!file) {
       alert('Por favor, seleccione un archivo para imprimir');
@@ -43,9 +42,9 @@ const PrintForm = () => {
 
     try {
       await axios.post('http://localhost:5000/api/print/print', formData, {
+        withCredentials: true,  // Esto asegura que las cookies se envíen con la solicitud
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`,
         },
       });
       alert('Documento enviado a imprimir correctamente');
@@ -66,6 +65,7 @@ const PrintForm = () => {
     const file = e.target.files[0];
     if (file) {
       setFile(file);
+      document.getElementById('file-name').value = file.name; // Mostrar el nombre del archivo seleccionado
       setShowPreview(true);
     } else {
       setFile(null);
