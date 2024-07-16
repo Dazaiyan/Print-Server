@@ -3,6 +3,7 @@ const path = require('path');
 const { exec } = require('child_process');
 const pool = require('../db');
 const { PDFDocument } = require('pdf-lib');
+const printers = require('../config/printers'); 
 
 const uploadDir = path.join(__dirname, '../uploads');
 
@@ -10,7 +11,7 @@ const printDocument = async (req, res) => {
     try {
         const { module, pages, copies = 1, orientation, color, paperSize, page_from, page_to } = req.body;
         const file = req.file;
-        const userCedula = req.cedula;  // Obtener el valor de user_cedula desde el request
+        const userCedula = req.cedula;  
 
         console.log('Request body:', req.body);
         console.log('Uploaded file:', file);
@@ -23,16 +24,14 @@ const printDocument = async (req, res) => {
         const filePath = path.join(uploadDir, file.filename);
         const fileName = file.originalname;
 
-        const printers = {
-            module1: 'MP-601',
-        };
+        const printerConfig = printers[module];
 
-        const printerName = printers[module];
-
-        if (!printerName) {
+        if (!printerConfig) {
             console.error('Invalid module');
             return res.status(400).json({ message: 'Invalid module' });
         }
+
+        const printerName = printerConfig.name;
 
         // Configurar las opciones de impresión
         let printOptions = `-d ${printerName} -o media=${paperSize} -o sides=one-sided -n ${copies}`;
