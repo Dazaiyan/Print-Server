@@ -57,6 +57,13 @@ const PrintForm = () => {
     }
   };
 
+  const handleLogout = () => {
+    // Aquí podrías agregar cualquier lógica adicional para cerrar sesión
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    navigate('/login');
+  };
+
   const triggerFileInput = () => {
     document.getElementById('file').click();
   };
@@ -84,6 +91,8 @@ const PrintForm = () => {
 
   return (
     <div className="container">
+      <div className="header-row">
+      </div>
       <div className="form-container">
         <div className="form-box">
           <form onSubmit={handleSubmit} id="uploadForm">
@@ -164,9 +173,13 @@ const PrintForm = () => {
             <button type="submit" className="btn" disabled={loading}>
               {loading ? 'Enviando...' : 'Imprimir'}
             </button>
+            <button type="button" className="btn btn-logout" onClick={handleLogout}>
+              Cerrar sesión
+            </button>
           </form>
         </div>
-        <div id="pdf-preview-container" className="pdf-preview-container" style={{ display: showPreview && file ? 'block' : 'none' }}>
+        <div className="pdf-preview-container">
+          <h2>Hospital Print Server</h2>
           <iframe id="pdf-preview" className="pdf-preview" src={file ? URL.createObjectURL(file) + '#toolbar=0' : ''}></iframe>
         </div>
       </div>
