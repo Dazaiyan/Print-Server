@@ -14,6 +14,8 @@ body {
   align-items: center;
   width: 100%;
   max-width: 500px; /* Aumenta el ancho máximo */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .login-box {
@@ -23,6 +25,7 @@ body {
   padding: 40px; /* Aumenta el padding */
   width: 100%;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .login-header {
@@ -32,7 +35,8 @@ body {
 }
 
 .login-header img {
-  width: 300px; /* Ajusta el tamaño según sea necesario */
+  width: 100%;
+  max-width: 300px; /* Ajusta el tamaño según sea necesario */
   height: auto;
 }
 
@@ -44,29 +48,56 @@ body {
   border: 1px solid #ccc;
   border-radius: 5px;
   box-sizing: border-box;
+  padding: 5px 10px; /* Reduce el padding */
 }
 
 .input-group img {
   position: absolute;
   left: 10px;
-  width: 25px; /* Ajusta el tamaño según sea necesario */
+  width: 20px; /* Ajusta el tamaño según sea necesario */
   height: auto;
 }
 
 .input-group input {
   width: 100%;
-  padding: 10px 40px 10px 40px; /* Ajusta el padding para que el texto no se superponga con el icono */
+  padding: 10px 10px 10px 40px; /* Ajusta el padding para que el texto no se superponga con el icono */
   border: none;
   outline: none;
   border-radius: 5px;
   flex: 1;
 }
 
-.show-password-icon {
-  cursor: pointer;
-  position: absolute;
-  right: 10px; /* Posiciona el icono a la derecha */
-  font-size: 24px; /* Ajusta el tamaño del icono según sea necesario */
+.show-password-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.show-password-group input {
+  margin-right: 10px;
+}
+
+.role-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column; /* Asegura que la etiqueta esté arriba del select */
+  align-items: flex-start;
+}
+
+.role-label {
+  margin-bottom: 5px; /* Añade un poco de espacio entre la etiqueta y el select */
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.role-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc; /* Ajusta el borde */
+  outline: none;
+  border-radius: 5px;
+  appearance: none;
+  background-color: #fff; /* Asegura que el fondo sea blanco */
 }
 
 button {
@@ -99,4 +130,24 @@ button[disabled] {
 .error-alert {
   color: red;
   margin-bottom: 15px;
+}
+
+/* Media Queries para responsive design */
+@media (max-width: 600px) {
+  .login-box {
+    padding: 20px; /* Reduce el padding en pantallas más pequeñas */
+  }
+
+  .input-group {
+    padding: 5px 5px; /* Ajusta el padding en pantallas más pequeñas */
+  }
+
+  .input-group img {
+    width: 16px; /* Ajusta el tamaño del icono en pantallas más pequeñas */
+  }
+
+  button {
+    padding: 10px; /* Reduce el tamaño del botón en pantallas más pequeñas */
+    font-size: 16px; /* Reduce el tamaño de la fuente en pantallas más pequeñas */
+  }
 }
