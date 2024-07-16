@@ -1,3 +1,5 @@
+/* AdminPage.css */
+
 .admin-container {
   padding: 20px;
 }
@@ -30,7 +32,7 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-bottom: 20px; /* Añadir margen inferior al botón */
+  margin-bottom: 20px;
 }
 
 .btn:hover {
@@ -70,4 +72,53 @@
   color: black;
   text-decoration: none;
   cursor: pointer;
+}
+
+/* Estilo personalizado para los botones del paginador */
+.p-paginator.p-component {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-last,
+.p-paginator .p-paginator-page {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 50%; /* Ajustar los bordes */
+  padding: 6px 10px; /* Ajustar el padding */
+  margin: 0 2px;
+  cursor: pointer;
+  height: 30px; /* Ajustar la altura */
+  width: 30px; /* Ajustar el ancho */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.p-paginator .p-paginator-prev:hover,
+.p-paginator .p-paginator-next:hover,
+.p-paginator .p-paginator-first:hover,
+.p-paginator .p-paginator-last:hover,
+.p-paginator .p-paginator-page:hover {
+  background-color: var(--hover-color);
+}
+
+.p-paginator .p-paginator-page.p-highlight {
+  background-color: var(--highlight-color);
+}
+
+.p-paginator .p-dropdown {
+  margin-left: 10px;
+  padding: 6px 10px;
+}
+
+/* Estilo para mover los botones de filtro a la derecha */
+.p-column-filter {
+  margin-left: 10px; /* Ajustar el margen a la derecha */
 }

@@ -83,7 +83,8 @@ const AdminPage = () => {
         ref={dt}
         value={logs}
         paginator
-        rows={10}
+        rows={5}
+        rowsPerPageOptions={[5, 10, 25, 50]}
         responsiveLayout="scroll"
         selectionMode="single"
         onSelectionChange={e => handleRowClick(e.value)}
@@ -91,6 +92,8 @@ const AdminPage = () => {
         filterDisplay="menu"
         globalFilterFields={['file_name', 'pages', 'copies', 'user_cedula']}
         emptyMessage="No se encontraron registros."
+        className="p-paginator-bottom"
+        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
       >
         <Column
           field="created_at"
@@ -102,6 +105,7 @@ const AdminPage = () => {
           body={dateBodyTemplate}
           filterElement={dateFilterTemplate}
           filterMatchMode={FilterMatchMode.DATE_IS}
+          className="p-column-filter"
         />
         <Column
           field="file_name"
@@ -110,6 +114,7 @@ const AdminPage = () => {
           filter
           filterPlaceholder="Buscar por nombre"
           filterMatchMode={FilterMatchMode.CONTAINS}
+          className="p-column-filter"
         />
         <Column
           field="pages"
@@ -118,6 +123,7 @@ const AdminPage = () => {
           filter
           filterPlaceholder="Buscar por páginas"
           filterMatchMode={FilterMatchMode.EQUALS}
+          className="p-column-filter"
         />
         <Column
           field="copies"
@@ -126,6 +132,7 @@ const AdminPage = () => {
           filter
           filterPlaceholder="Buscar por copias"
           filterMatchMode={FilterMatchMode.EQUALS}
+          className="p-column-filter"
         />
         <Column
           field="user_cedula"
@@ -134,6 +141,7 @@ const AdminPage = () => {
           filter
           filterPlaceholder="Buscar por cédula"
           filterMatchMode={FilterMatchMode.CONTAINS}
+          className="p-column-filter"
         />
       </DataTable>
 
