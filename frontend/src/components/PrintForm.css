@@ -8,8 +8,8 @@ body {
 
 .container {
   max-width: 1600px; /* Aumenta el ancho máximo del contenedor */
-  margin: 20px auto;
-  padding: 20px;
+  margin: 10px auto;
+  padding: 10px;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -26,17 +26,17 @@ body {
 
 .form-box {
   flex: 1;
-  max-width: 800px; /* Aumenta el ancho máximo del cuadro de formulario */
+  max-width: 900px; /* Aumenta el ancho máximo del cuadro de formulario */
 }
 
 .pdf-preview-container {
   flex: 1;
   min-width: 500px; /* Aumenta el ancho mínimo del contenedor de previsualización */
-  margin-left: 20px; /* Añade margen a la izquierda para separar del formulario */
+  margin-left: 30px; /* Añade margen a la izquierda para separar del formulario */
 }
 
 h2 {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   text-align: center;
 }
 
@@ -137,4 +137,18 @@ button:hover {
 
 .button-group button + button {
   margin-top: 0;
+}
+
+/* Nuevo estilo para el botón de cerrar sesión */
+button.btn-logout {
+  background-color: #dc3545; /* Color rojo */
+  color: white;
+  width: 150px; /* Ancho más pequeño */
+  padding: 10px;
+  margin: 0 auto;
+  display: block;
+}
+
+button.btn-logout:hover {
+  background-color: #c82333; /* Rojo más oscuro en hover */
 }
