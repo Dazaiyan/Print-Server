@@ -9,7 +9,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [role, setRole] = useState('user'); // Añadir el estado para el rol
+  const [role, setRole] = useState('user'); // Valor predefinido es "user"
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -44,7 +44,7 @@ const Login = () => {
           <div className="input-group">
             <img src="/usuario.png" alt="Cédula Icon" /> {/* Asegúrate de tener un icono adecuado */}
             <input
-              type="cedula"
+              type="Cedula"
               value={cedula}
               onChange={(e) => setCedula(e.target.value)}
               placeholder="Cédula"
@@ -55,22 +55,25 @@ const Login = () => {
             <img src="/contraseña.png" alt="Password Icon" /> {/* Asegúrate de tener un icono adecuado */}
             <input
               id="password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? "contraseña" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Contraseña"
               required
             />
-            <box-icon
-              name={showPassword ? 'show' : 'hide'}
-              type='solid'
-              className="show-password-icon"
-              onClick={() => setShowPassword(!showPassword)}
-            ></box-icon>
           </div>
-          <div className="input-group">
-            <label htmlFor="role">Rol:</label>
-            <select id="role" value={role} onChange={(e) => setRole(e.target.value)}>
+          <div className="show-password-group">
+            <input
+              type="checkbox"
+              id="show-password-checkbox"
+              checked={showPassword}
+              onChange={(e) => setShowPassword(e.target.checked)}
+            />
+            <label htmlFor="show-password-checkbox">Mostrar contraseña</label>
+          </div>
+          <div className="role-group">
+            <label htmlFor="role" className="role-label">Rol:</label>
+            <select id="role" value={role} onChange={(e) => setRole(e.target.value)} className="role-select">
               <option value="user">Usuario</option>
               <option value="admin">Administrador</option>
             </select>
