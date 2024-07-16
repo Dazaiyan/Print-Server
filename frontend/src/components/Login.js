@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
 import './Login.css';
+import ForgotPasswordModal from './ForgotPasswordModal';
 
 const Login = () => {
   const [cedula, setCedula] = useState('');
@@ -10,6 +11,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [role, setRole] = useState('user'); // Valor predefinido es "user"
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -44,7 +46,7 @@ const Login = () => {
           <div className="input-group">
             <img src="/usuario.png" alt="Cédula Icon" /> {/* Asegúrate de tener un icono adecuado */}
             <input
-              type="Cedula"
+              type="Cédula"
               value={cedula}
               onChange={(e) => setCedula(e.target.value)}
               placeholder="Cédula"
@@ -55,7 +57,7 @@ const Login = () => {
             <img src="/contraseña.png" alt="Password Icon" /> {/* Asegúrate de tener un icono adecuado */}
             <input
               id="password"
-              type={showPassword ? "contraseña" : "password"}
+              type={showPassword ? "Contraseña" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Contraseña"
@@ -83,9 +85,10 @@ const Login = () => {
           </button>
         </form>
         <div className="links">
-          <a href="/forgot-password">¿Olvidaste tu contraseña?</a>
+          <a href="#!" onClick={() => setIsModalOpen(true)}>¿Olvidaste tu contraseña?</a>
         </div>
       </div>
+      {isModalOpen && <ForgotPasswordModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 };
