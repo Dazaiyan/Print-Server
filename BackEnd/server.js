@@ -5,7 +5,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
 const printRoutes = require('./routes/printRoutes');
-const adminRoutes = require('./routes/adminRoutes'); // Asegúrate de importar adminRoutes
+const adminRoutes = require('./routes/adminRoutes');
 const authenticateToken = require('./middleware/authenticateToken');
 
 const app = express();
@@ -20,9 +20,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/print', authenticateToken, printRoutes);
-app.use('/api/admin', adminRoutes); // Asegúrate de usar adminRoutes
+app.use('/api/admin', adminRoutes);
+
+// Endpoint de estado del servidor
+app.get('/api/status', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+});
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
-

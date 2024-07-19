@@ -3,7 +3,7 @@ const printers = {
         name: "MP-601",
         ip: "172.20.31.61"
     },
-    "module2": { // Agregando la nueva impresora Lexmark
+    "module2": { 
         name: "Lexmark-MX610",
         ip: "172.20.16.6"
     },

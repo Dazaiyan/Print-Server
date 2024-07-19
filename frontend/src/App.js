@@ -25,6 +25,7 @@ function App() {
     };
 
     fetchUserRole();
+
   }, []);
 
   if (loading) {
