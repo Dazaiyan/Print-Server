@@ -1,4 +1,4 @@
-const authorizeRole = (role) => {
+/*const authorizeRole = (role) => {
     return (req, res, next) => {
         if (req.role !== role) {
             return res.status(403).json({ message: 'Unauthorized' });
@@ -7,4 +7,4 @@ const authorizeRole = (role) => {
     };
 };
 
-module.exports = authorizeRole;
+module.exports = authorizeRole;*/

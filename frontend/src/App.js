@@ -1,31 +1,20 @@
+// src/App.js
+
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import axios from 'axios';
+// Eliminar la importación innecesaria de axios
 import Header from './components/Header';
 import LoginPage from './pages/LoginPage';
 import PrintPage from './pages/PrintPage';
 import AdminPage from './components/AdminPage';
-import PrivateRoute from './routes/PrivateRoute';
+import PrivateRoute from './routes/PrivateRoute'; // Asegúrate de que el archivo existe y está correctamente exportado
 import './App.css';
 
 function App() {
-  const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/auth/checkAuth', { withCredentials: true });
-        setUserRole(response.data.role);
-      } catch (error) {
-        setUserRole(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserRole();
-
+    setLoading(false);
   }, []);
 
   if (loading) {
@@ -56,9 +45,7 @@ function App() {
           />
           <Route 
             path="/" 
-            element={
-              userRole ? (userRole === 'admin' ? <Navigate to="/admin" /> : <Navigate to="/print" />) : <Navigate to="/login" />
-            } 
+            element={<Navigate to="/login" />} 
           />
         </Routes>
       </Router>

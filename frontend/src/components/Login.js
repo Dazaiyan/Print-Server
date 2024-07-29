@@ -1,3 +1,5 @@
+// src/components/Login.js
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
@@ -6,11 +8,10 @@ import ForgotPasswordModal from './ForgotPasswordModal';
 
 const Login = () => {
   const [cedula, setCedula] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [clave, setClave] = useState('');
+  const [showClave, setShowClave] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [role, setRole] = useState('user'); // Valor predefinido es "user"
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -19,13 +20,12 @@ const Login = () => {
     setLoading(true);
     setError('');
     try {
-      const res = await login(cedula, password, role); // Incluye el rol en la petición
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('role', role); // Guarda el rol en el almacenamiento local
-      if (role === 'admin') {
-        navigate('/admin');
-      } else {
+      const res = await login(cedula, clave);
+      if (res.data.status === 1) {
+        localStorage.setItem('token', res.data.token);
         navigate('/print');
+      } else {
+        setError('Credenciales incorrectas.');
       }
     } catch (error) {
       console.error('Error al iniciar sesión', error);
@@ -39,14 +39,14 @@ const Login = () => {
     <div className="login-container">
       <div className="login-box">
         <div className="login-header">
-          <img src="/logo.png" alt="Logo del Hospital" /> {/* Asegúrate de tener un logo adecuado */}
+          <img src="/logo.png" alt="Logo del Hospital" />
         </div>
         {error && <div className="error-alert">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <img src="/usuario.png" alt="Cédula Icon" /> {/* Asegúrate de tener un icono adecuado */}
+            <img src="/usuario.png" alt="Cédula Icon" />
             <input
-              type="Cédula"
+              type="text"
               value={cedula}
               onChange={(e) => setCedula(e.target.value)}
               placeholder="Cédula"
@@ -54,31 +54,24 @@ const Login = () => {
             />
           </div>
           <div className="input-group">
-            <img src="/contraseña.png" alt="Password Icon" /> {/* Asegúrate de tener un icono adecuado */}
+            <img src="/contraseña.png" alt="Password Icon" />
             <input
-              id="password"
-              type={showPassword ? "Contraseña" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id="clave"
+              type={showClave ? "text" : "password"}
+              value={clave}
+              onChange={(e) => setClave(e.target.value)}
               placeholder="Contraseña"
               required
             />
           </div>
-          <div className="show-password-group">
+          <div className="show-clave-group">
             <input
               type="checkbox"
-              id="show-password-checkbox"
-              checked={showPassword}
-              onChange={(e) => setShowPassword(e.target.checked)}
+              id="show-clave-checkbox"
+              checked={showClave}
+              onChange={(e) => setShowClave(e.target.checked)}
             />
-            <label htmlFor="show-password-checkbox">Mostrar contraseña</label>
-          </div>
-          <div className="role-group">
-            <label htmlFor="role" className="role-label">Rol:</label>
-            <select id="role" value={role} onChange={(e) => setRole(e.target.value)} className="role-select">
-              <option value="user">Usuario</option>
-              <option value="admin">Administrador</option>
-            </select>
+            <label htmlFor="show-clave-checkbox">Mostrar contraseña</label>
           </div>
           <button type="submit" disabled={loading}>
             {loading ? 'Cargando...' : 'Iniciar sesión'}

@@ -1,42 +1,32 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcryptjs'); // Si estás usando bcrypt para hashing de contraseñas
 const pool = require('../db');
-require('dotenv').config();
 
-const login = async (req, res) => {
-    const { cedula, password, role } = req.body;
+exports.login = async (req, res) => {
+    const { cedula, clave } = req.body;
 
     try {
-        const userResult = await pool.query('SELECT * FROM users WHERE cedula = $1', [cedula]);
+        const user = await pool.query('SELECT * FROM users WHERE cedula = $1', [cedula]);
 
-        if (userResult.rows.length === 0) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+        if (user.rows.length === 0) {
+            return res.status(400).json({ message: 'Usuario no encontrado' });
         }
 
-        const user = userResult.rows[0];
+        const validPassword = bcrypt.compareSync(clave, user.rows[0].password); // Si usas bcrypt
+        // const validPassword = user.rows[0].password === md5(clave); // Si usas md5
 
-        // Verifica la contraseña
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+        if (!validPassword) {
+            return res.status(400).json({ message: 'Contraseña incorrecta' });
         }
 
-        // Genera el token JWT
-        const token = jwt.sign({ userId: user.id, cedula: user.cedula, role: user.role }, process.env.JWT_SECRET, { expiresIn: '4h' });
-
-        // Enviar el token en una cookie segura
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict'
+        const token = jwt.sign({ userId: user.rows[0].id, cedula: user.rows[0].cedula }, process.env.JWT_SECRET, {
+            expiresIn: '1h',
         });
 
-        res.json({ role: user.role });
+        res.cookie('token', token, { httpOnly: true });
+        res.json({ authenticated: true });
     } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ message: 'Server error' });
+        console.error(error);
+        res.status(500).json({ message: 'Error del servidor' });
     }
 };
-
-module.exports = { login };

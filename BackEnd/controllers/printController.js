@@ -3,7 +3,7 @@ const path = require('path');
 const { exec } = require('child_process');
 const pool = require('../db');
 const { PDFDocument } = require('pdf-lib');
-const printers = require('../config/printers'); 
+const printers = require('../config/printers');
 
 const uploadDir = path.join(__dirname, '../uploads');
 
@@ -11,7 +11,7 @@ const printDocument = async (req, res) => {
     try {
         const { module, pages, copies = 1, orientation, color, paperSize, page_from, page_to } = req.body;
         const file = req.file;
-        const userCedula = req.cedula;  
+        const userCedula = req.cedula;
 
         console.log('Request body:', req.body);
         console.log('Uploaded file:', file);
@@ -34,7 +34,7 @@ const printDocument = async (req, res) => {
         const printerName = printerConfig.name;
 
         // Configurar las opciones de impresión
-        let printOptions = `-d ${printerName} -o media=${paperSize} -o sides=one-sided -n ${copies}`;
+        let printOptions = `-d VirtualPrinter -o media=${paperSize} -o sides=one-sided -n ${copies}`;
 
         if (orientation === 'landscape') {
             printOptions += ' -o orientation-requested=4'; // Landscape
@@ -66,41 +66,51 @@ const printDocument = async (req, res) => {
                 console.error('Printing error:', error);
                 return res.status(500).json({ message: 'Server error', error: error.message });
             }
-            console.log('Printed successfully', stdout);
+            console.log('Printed successfully to VirtualPrinter', stdout);
 
-            try {
-                const result = await pool.query(
-                    'INSERT INTO prints (file_name, pages, copies, printer, user_cedula) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-                    [fileName, pageCount, copies, printerName, userCedula]  // Incluir user_cedula en la inserción
-                );
-                console.log('Print details saved to database:', result.rows[0]);
+            // Después de enviar a VirtualPrinter, redirigir el trabajo a la impresora física
+            const redirectCommand = `lp -d ${printerName} ${filePath}`;
+            exec(redirectCommand, async (redirectError, redirectStdout, redirectStderr) => {
+                if (redirectError) {
+                    console.error('Redirect printing error:', redirectError);
+                    return res.status(500).json({ message: 'Server error during redirect', error: redirectError.message });
+                }
+                console.log('Redirected printed successfully', redirectStdout);
 
-                fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.error('Failed to delete file:', err);
-                    } else {
-                        console.log('File deleted successfully');
-                    }
-                });
+                try {
+                    const result = await pool.query(
+                        'INSERT INTO prints (file_name, pages, copies, printer, user_cedula) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+                        [fileName, pageCount, copies, printerName, userCedula]
+                    );
+                    console.log('Print details saved to database:', result.rows[0]);
 
-                return res.json({
-                    message: 'Printed successfully and details saved to database',
-                    output: stdout,
-                    printDetails: result.rows[0],
-                });
-            } catch (dbError) {
-                console.error('Database error:', dbError);
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.error('Failed to delete file:', err);
+                        } else {
+                            console.log('File deleted successfully');
+                        }
+                    });
 
-                fs.unlink(filePath, (err) => {
-                    if (err) {
-                        console.error('Failed to delete file:', err);
-                    } else {
-                        console.log('File deleted successfully');
-                    }
-                });
+                    return res.json({
+                        message: 'Printed successfully and details saved to database',
+                        output: redirectStdout,
+                        printDetails: result.rows[0],
+                    });
+                } catch (dbError) {
+                    console.error('Database error:', dbError);
 
-                return res.status(500).json({ message: 'Printed successfully, but failed to save details to database', error: dbError.message });
-            }
+                    fs.unlink(filePath, (err) => {
+                        if (err) {
+                            console.error('Failed to delete file:', err);
+                        } else {
+                            console.log('File deleted successfully');
+                        }
+                    });
+
+                    return res.status(500).json({ message: 'Printed successfully, but failed to save details to database', error: dbError.message });
+                }
+            });
         });
     } catch (error) {
         console.error('Printing error:', error);

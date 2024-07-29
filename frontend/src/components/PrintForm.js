@@ -14,7 +14,7 @@ const PrintForm = () => {
   const [paperSize, setPaperSize] = useState('iso_a4_210x297mm');
   const [copies, setCopies] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
+  // const [showPreview, setShowPreview] = useState(false);  // Comentado porque no se usa
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -42,7 +42,7 @@ const PrintForm = () => {
 
     try {
       await axios.post('http://localhost:5000/api/print/print', formData, {
-        withCredentials: true,  // Esto asegura que las cookies se envíen con la solicitud
+        withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -58,7 +58,6 @@ const PrintForm = () => {
   };
 
   const handleLogout = () => {
-    // Aquí podrías agregar cualquier lógica adicional para cerrar sesión
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     navigate('/login');
@@ -72,11 +71,11 @@ const PrintForm = () => {
     const file = e.target.files[0];
     if (file) {
       setFile(file);
-      document.getElementById('file-name').value = file.name; // Mostrar el nombre del archivo seleccionado
-      setShowPreview(true);
+      document.getElementById('file-name').value = file.name;
+      // setShowPreview(true);  // Comentado porque no se usa
     } else {
       setFile(null);
-      setShowPreview(false);
+      // setShowPreview(false);  // Comentado porque no se usa
     }
   };
 
@@ -91,8 +90,7 @@ const PrintForm = () => {
 
   return (
     <div className="container">
-      <div className="header-row">
-      </div>
+      <div className="header-row"></div>
       <div className="form-container">
         <div className="form-box">
           <form onSubmit={handleSubmit} id="uploadForm">
@@ -180,7 +178,7 @@ const PrintForm = () => {
         </div>
         <div className="pdf-preview-container">
           <h2>Hospital Print Server</h2>
-          <iframe id="pdf-preview" className="pdf-preview" src={file ? URL.createObjectURL(file) + '#toolbar=0' : ''}></iframe>
+          <iframe id="pdf-preview" className="pdf-preview" src={file ? URL.createObjectURL(file) + '#toolbar=0' : ''} title="Vista previa de PDF"></iframe>
         </div>
       </div>
     </div>

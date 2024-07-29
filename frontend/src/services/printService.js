@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/print/print';
+const API_URL = 'http://172.20.33.219:5010//api/print/print';
 
 const addPrintRequest = (file, fileName, printer) => {
     const formData = new FormData();

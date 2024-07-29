@@ -1,0 +1,55 @@
+<IfModule mod_headers.c>
+  # Establece las políticas de seguridad de contenido
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; object-src 'none'; form-action 'self'; base-uri 'self';"
+
+  # Establece la política de ancestros de marcos para que solo se permitan marcos de la misma fuente
+  Header always set Content-Security-Policy "frame-ancestors 'self'"
+
+  # Previene la detección de tipos de contenido MIME no declarados
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Protege contra ataques de clickjacking
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Activa el filtro XSS en modo de bloqueo
+  Header always set X-XSS-Protection "1; mode=block"
+
+  # Configura la política de referencia HTTP
+  Header always set Referrer-Policy "no-referrer-when-downgrade"
+
+  # Establece la política de seguridad de transporte estricto HTTP (HSTS)
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# Configuración de seguridad en el archivo principal de la aplicación
+
+# Establece la política de ancestros de marcos para que solo se permitan marcos de la misma fuente
+header("Content-Security-Policy: frame-ancestors 'self';");
+
+# Evita la detección de tipos de contenido MIME no declarados
+header("X-Content-Type-Options: nosniff");
+
+# Protege contra ataques de clickjacking
+header("X-Frame-Options: SAMEORIGIN");
+
+# Activa el filtro XSS en modo de bloqueo
+header("X-XSS-Protection: 1; mode=block");
+
+# Configura la política de referencia HTTP
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
+# Establece la política de seguridad de transporte estricto HTTP (HSTS)
+header("Strict-Transport-Security: max-age=31536000; includeSubDomains");
+
+# Configura la política de permisos para controlar características y APIs
+header("Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
+
+# Establece una cookie segura con opciones adicionales de seguridad
+setcookie('name', 'value', [
+    'expires' => time() + 86400,
+    'path' => '/',
+    'domain' => 'hep.gob.ec',
+    'secure' => true, // Solo para HTTPS
+    'httponly' => true, // Accesible solo por HTTP
+    'samesite' => 'Strict', // Opcional, pero recomendado
+]);
