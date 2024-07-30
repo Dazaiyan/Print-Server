@@ -67,37 +67,15 @@ body {
   flex: 1;
 }
 
-.show-password-group {
+.show-clave-group {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  justify-content: flex-start; /* Mueve el grupo de mostrar contraseña a la izquierda */
 }
 
-.show-password-group input {
-  margin-right: 10px;
-}
-
-.role-group {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column; /* Asegura que la etiqueta esté arriba del select */
-  align-items: flex-start;
-}
-
-.role-label {
-  margin-bottom: 5px; /* Añade un poco de espacio entre la etiqueta y el select */
-  font-weight: bold;
-  white-space: nowrap;
-}
-
-.role-select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc; /* Ajusta el borde */
-  outline: none;
-  border-radius: 5px;
-  appearance: none;
-  background-color: #fff; /* Asegura que el fondo sea blanco */
+.show-clave-group input {
+  margin-right: 5px;
 }
 
 button {

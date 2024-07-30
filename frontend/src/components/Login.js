@@ -43,7 +43,7 @@ const Login = () => {
           <div className="input-group">
             <img src="/usuario.png" alt="Cédula Icon" />
             <input
-              type="text"
+              type="cedula"
               value={cedula}
               onChange={(e) => setCedula(e.target.value)}
               placeholder="Cédula"
@@ -54,7 +54,7 @@ const Login = () => {
             <img src="/contraseña.png" alt="Password Icon" />
             <input
               id="clave"
-              type={showClave ? "text" : "password"}
+              type={showClave ? "contraseña" : "password"}
               value={clave}
               onChange={(e) => setClave(e.target.value)}
               placeholder="Contraseña"
