@@ -1,32 +1,28 @@
+const axios = require('axios');
+const md5 = require('md5');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs'); // Si estás usando bcrypt para hashing de contraseñas
-const pool = require('../db');
+const dotenv = require('dotenv');
+
+dotenv.config();
+
+const JWT_SECRET = process.env.JWT_SECRET;
+const EXTERNAL_API_URL = `${process.env.REACT_APP_BACKEND_URL}/getLoginAvalab`;
 
 exports.login = async (req, res) => {
-    const { cedula, clave } = req.body;
+  const { cedula, clave } = req.body;
+  try {
+    const hashedClave = md5(clave); // Asegurarse de que la clave se hashea correctamente
+    const response = await axios.post(EXTERNAL_API_URL, { cedula, clave: hashedClave });
 
-    try {
-        const user = await pool.query('SELECT * FROM users WHERE cedula = $1', [cedula]);
-
-        if (user.rows.length === 0) {
-            return res.status(400).json({ message: 'Usuario no encontrado' });
-        }
-
-        const validPassword = bcrypt.compareSync(clave, user.rows[0].password); // Si usas bcrypt
-        // const validPassword = user.rows[0].password === md5(clave); // Si usas md5
-
-        if (!validPassword) {
-            return res.status(400).json({ message: 'Contraseña incorrecta' });
-        }
-
-        const token = jwt.sign({ userId: user.rows[0].id, cedula: user.rows[0].cedula }, process.env.JWT_SECRET, {
-            expiresIn: '1h',
-        });
-
-        res.cookie('token', token, { httpOnly: true });
-        res.json({ authenticated: true });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Error del servidor' });
+    if (response.data && response.data.status === 1) {
+      const token = jwt.sign({ cedula }, JWT_SECRET, { expiresIn: '1h' });
+      res.cookie('token', token, { httpOnly: true }); // Almacenar el token en una cookie
+      res.json({ authenticated: true, user: response.data });
+    } else {
+      res.status(401).json({ message: 'Invalid credentials' });
     }
-};
+  } catch (error) {
+    console.error('Error during login:', error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  }
+};0

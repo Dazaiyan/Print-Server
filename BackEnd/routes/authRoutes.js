@@ -6,7 +6,7 @@ const authenticateToken = require('../middleware/authenticateToken');
 router.post('/login', login);
 
 router.get('/checkAuth', authenticateToken, (req, res) => {
-    res.json({ role: req.role });
+    res.json({ authenticated: true });
 });
 
 module.exports = router;

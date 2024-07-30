@@ -1,17 +1,22 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const dotenv = require('dotenv');
+
+dotenv.config();
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const authenticateToken = (req, res, next) => {
-    const token = req.cookies.token; // Verificar la cookie de token
+    const token = req.cookies.token; // Obtener el token desde la cookie
+    if (!token) {
+        return res.status(401).json({ message: 'Access denied' });
+    }
 
-    if (!token) return res.sendStatus(401); // Si no hay token, retornar 401
-
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403); // Si el token no es válido, retornar 403
-        req.userId = user.userId;
-        req.cedula = user.cedula;
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
         next();
-    });
+    } catch (error) {
+        return res.status(401).json({ message: 'Invalid token' });
+    }
 };
 
 module.exports = authenticateToken;

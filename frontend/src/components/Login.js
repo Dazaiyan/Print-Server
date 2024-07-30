@@ -1,5 +1,3 @@
-// src/components/Login.js
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/authService';
@@ -21,11 +19,10 @@ const Login = () => {
     setError('');
     try {
       const res = await login(cedula, clave);
-      if (res.data.status === 1) {
-        localStorage.setItem('token', res.data.token);
+      if (res.data.authenticated) {
         navigate('/print');
       } else {
-        setError('Credenciales incorrectas.');
+        setError('Hubo un error al iniciar sesión. Por favor, verifica tus credenciales.');
       }
     } catch (error) {
       console.error('Error al iniciar sesión', error);

@@ -3,10 +3,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+const md5 = require('md5');
 const authRoutes = require('./routes/authRoutes');
 const printRoutes = require('./routes/printRoutes');
 const adminRoutes = require('./routes/adminRoutes');
-const axios = require('axios'); // Agregar Axios
+const authenticateToken = require('./middleware/authenticateToken');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,32 +22,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/api/auth', authRoutes);
-app.use('/api/print', printRoutes); // Eliminar authenticateToken
-app.use('/api/admin', adminRoutes);
+app.use('/api/print', authenticateToken, printRoutes);
+app.use('/api/admin', authenticateToken, adminRoutes);
 
 // Endpoint de estado del servidor
 app.get('/api/status', (req, res) => {
     res.status(200).json({ status: 'ok' });
 });
 
-// Endpoint proxy para la API externa
-app.post('/proxy/getLoginAvalab', async (req, res) => {
-    try {
-        const response = await axios.post('http://172.20.33.219:5010/getLoginAvalab', req.body, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        res.json(response.data);
-    } catch (error) {
-        res.status(error.response ? error.response.status : 500).json({ error: error.message });
+// Proxy para manejar el hash de la clave
+app.use('/proxy', (req, res, next) => {
+    if (req.body.clave) {
+        req.body.clave = md5(req.body.clave);
     }
-});
-
-// Nuevo endpoint proxy para checkAuth (comentado)
-app.get('/proxy/checkAuth', (req, res) => {
-    res.json({ authenticated: true });
-});
+    next();
+}, createProxyMiddleware({
+    target: process.env.REACT_APP_BACKEND_URL,
+    changeOrigin: true,
+    pathRewrite: {
+        '^/proxy': '', // Elimina /proxy de la URL
+    },
+}));
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
